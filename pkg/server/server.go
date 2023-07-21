@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/zapier/kubechecks/pkg/config"
 	"net/url"
 	"strings"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
-	"github.com/zapier/kubechecks/pkg"
 	"github.com/zapier/kubechecks/pkg/argo_client"
 	"github.com/zapier/kubechecks/pkg/vcs_clients"
 	"github.com/ziflex/lecho/v3"
@@ -23,11 +23,14 @@ const KubeChecksHooksPathPrefix = "/hooks"
 var singleton *Server
 
 type Server struct {
-	cfg *pkg.ServerConfig
+	cfg        *config.ServerConfig
 }
 
-func NewServer(cfg *pkg.ServerConfig) *Server {
-	singleton = &Server{cfg: cfg}
+func NewServer(cfg *config.ServerConfig) *Server {
+	singleton = &Server{
+		cfg:        cfg,
+	}
+
 	return singleton
 }
 
@@ -128,7 +131,7 @@ func (s *Server) buildVcsToArgoMap() error {
 
 	ctx := context.TODO()
 
-	result := pkg.NewVcsToArgoMap()
+	result := config.NewVcsToArgoMap()
 
 	argoClient := argo_client.GetArgoClient()
 

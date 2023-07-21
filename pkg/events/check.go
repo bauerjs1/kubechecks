@@ -3,6 +3,7 @@ package events
 import (
 	"context"
 	"fmt"
+	"github.com/zapier/kubechecks/pkg/config"
 	"os"
 	"strings"
 	"sync/atomic"
@@ -40,7 +41,7 @@ type CheckEvent struct {
 
 	affectedItems affected_apps.AffectedItems
 
-	cfg *pkg.ServerConfig
+	cfg *config.ServerConfig
 }
 
 const (
@@ -63,7 +64,7 @@ func init() {
 	hostname, _ = os.Hostname()
 }
 
-func NewCheckEvent(repo *repo.Repo, client vcs_clients.Client, cfg *pkg.ServerConfig) *CheckEvent {
+func NewCheckEvent(repo *repo.Repo, client vcs_clients.Client, cfg *config.ServerConfig) *CheckEvent {
 	ce := &CheckEvent{
 		cfg:    cfg,
 		client: client,
