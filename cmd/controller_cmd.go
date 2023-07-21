@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/zapier/kubechecks/pkg/config"
 	"os"
 	"os/signal"
 	"syscall"
@@ -26,6 +27,7 @@ var controllerCmd = &cobra.Command{
 		fmt.Println("Starting KubeChecks:", pkg.GitTag, pkg.GitCommit)
 
 		server := server.NewServer(&config.ServerConfig{
+			ArgoCdNamespace: viper.GetString("argocd-namespace"),
 			UrlPrefix:       viper.GetString("webhook-url-prefix"),
 			WebhookSecret:   viper.GetString("webhook-secret"),
 		})
@@ -69,6 +71,7 @@ func init() {
 	flags.Bool("show-debug-info", false, "Set to true to print debug info to the footer of MR comments (KUBECHECKS_SHOW_DEBUG_INFO).")
 	flags.Bool("enable-conftest", false, "Set to true to enable conftest policy checking of manifests (KUBECHECKS_ENABLE_CONFTEST).")
 	flags.String("label-filter", "", "(Optional) If set, The label that must be set on an MR (as \"kubechecks:<value>\") for kubechecks to process the merge request webhook (KUBECHECKS_LABEL_FILTER).")
+	flags.String("argocd-namespace", "argocd", "The namespace to watch for Application resources")
 	flags.String("openai-api-token", "", "OpenAI API Token (KUBECHECKS_OPENAI_API_TOKEN).")
 	flags.String("webhook-url-base", "", "The URL where KubeChecks receives webhooks from Gitlab")
 	flags.String("webhook-url-prefix", "", "If your application is running behind a proxy that uses path based routing, set this value to match the path prefix.")
@@ -86,10 +89,12 @@ func init() {
 	panicIfError(viper.BindPFlag("fallback-k8s-version", flags.Lookup("fallback-k8s-version")))
 	panicIfError(viper.BindPFlag("show-debug-info", flags.Lookup("show-debug-info")))
 	panicIfError(viper.BindPFlag("label-filter", flags.Lookup("label-filter")))
+	panicIfError(viper.BindPFlag("argocd-namespace", flags.Lookup("argocd-namespace")))
 	panicIfError(viper.BindPFlag("openai-api-token", flags.Lookup("openai-api-token")))
 	panicIfError(viper.BindPFlag("webhook-url-base", flags.Lookup("webhook-url-base")))
 	panicIfError(viper.BindPFlag("webhook-url-prefix", flags.Lookup("webhook-url-prefix")))
 	panicIfError(viper.BindPFlag("webhook-secret", flags.Lookup("webhook-secret")))
 	panicIfError(viper.BindPFlag("ensure-webhooks", flags.Lookup("ensure-webhooks")))
 	panicIfError(viper.BindPFlag("monitor-all-applications", flags.Lookup("monitor-all-applications")))
+
 }
