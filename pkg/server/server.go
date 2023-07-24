@@ -2,8 +2,6 @@ package server
 
 import (
 	"context"
-	"github.com/zapier/kubechecks/pkg/app_watcher"
-	"github.com/zapier/kubechecks/pkg/config"
 	"net/url"
 	"strings"
 
@@ -14,7 +12,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"github.com/zapier/kubechecks/pkg/app_watcher"
 	"github.com/zapier/kubechecks/pkg/argo_client"
+	"github.com/zapier/kubechecks/pkg/config"
 	"github.com/zapier/kubechecks/pkg/vcs_clients"
 	"github.com/ziflex/lecho/v3"
 )

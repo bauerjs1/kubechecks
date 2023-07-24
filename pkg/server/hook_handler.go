@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/zapier/kubechecks/pkg/config"
 	"net/http"
 	"strings"
 	"sync"
@@ -11,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"github.com/zapier/kubechecks/pkg/config"
 	"github.com/zapier/kubechecks/pkg/events"
 	"github.com/zapier/kubechecks/pkg/github_client"
 	"github.com/zapier/kubechecks/pkg/gitlab_client"
