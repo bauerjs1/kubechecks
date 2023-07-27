@@ -3,11 +3,12 @@ package gitlab_client
 import (
 	"context"
 	"fmt"
-	giturl "github.com/kubescape/go-git-url"
 	"io"
 	"net/http"
 	"strings"
 	"sync"
+
+	giturl "github.com/kubescape/go-git-url"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
@@ -113,6 +114,7 @@ func parseRepoName(url string) string {
 	gitURL, err := giturl.NewGitURL(url)
 	if err != nil {
 		log.Error().Err(err).Str("url", url).Msg("could not parse GitLab URL")
+		return ""
 	}
 
 	return strings.Join([]string{gitURL.GetOwnerName(), gitURL.GetRepoName()}, "/")
@@ -144,6 +146,9 @@ func (c *Client) GetHookByUrl(ctx context.Context, repoName, webhookUrl string) 
 
 func (c *Client) CreateHook(ctx context.Context, repoName, webhookUrl, webhookSecret string) error {
 	pid := parseRepoName(repoName)
+	if pid == "" {
+		return fmt.Errorf("repo name is not set")
+	}
 	_, _, err := c.Client.Projects.AddProjectHook(pid, &gitlab.AddProjectHookOptions{
 		URL:                 pkg.Pointer(webhookUrl),
 		MergeRequestsEvents: pkg.Pointer(true),
